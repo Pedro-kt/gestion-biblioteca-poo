@@ -12,6 +12,7 @@ Proyecto simple de gestión de biblioteca hecho en Kotlin con programación orie
 - Tomar prestado un libro
 - Devolver un libro
 - Mostrar informacion del libro
+- Mostrar la cantidad de libros que tiene el usuario en su poder
 
 ## 🔍 Proximas funcionalidades
 
