@@ -71,16 +71,39 @@ class Biblioteca(
 
 }
 
+//Funciones de entrada al programa
+
+//Funcion de saludar
+fun saludoBienvenida() = println("Bienvenido/a al sistema de gestion de biblioteca")
+
+//Funcion breve descripcion del programa
+fun descripcionDeSistema() = println("Dentro del sistema usted puede:")
+
+fun opcionesDelSistema() {
+
+    //Opciones de accion en el programa
+    val opciones = listOf(
+        "- Tomar prestado un libro",
+        "- Devolver un libro",
+        "- Pedir informacion del libro"
+    )
+
+    //iterador de la lista opciones, para imprimir en pantalla las opciones que tiene el sistema para brindar
+    for (verOpciones in opciones) {
+        println(verOpciones)
+    }
+}
+
+//Funcion que muestra la entrada al programa
+fun mostrarEntrada() {
+    saludoBienvenida()
+    descripcionDeSistema()
+    opcionesDelSistema()
+}
+
 fun main() {
 
-    println("Cuantos libros ingresara?")
-    val cantidadDeLibros = readln().toInt()
-    if (cantidadDeLibros > 0) {
-        for (librosIngresados in 1..cantidadDeLibros) {
-            println("Ingrese los datos del/los libro")
-
-        }
-    }
+    mostrarEntrada()
 
     //Libros
 
