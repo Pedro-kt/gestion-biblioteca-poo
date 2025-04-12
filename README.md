@@ -13,10 +13,10 @@ Proyecto simple de gestión de biblioteca hecho en Kotlin con programación orie
 - Devolver un libro
 - Mostrar informacion del libro
 - Mostrar la cantidad de libros que tiene el usuario en su poder
+- Crear Usuario, con validador de contraseña
 
 ## 🔍 Proximas funcionalidades
 
-- Crear usuario
 - Agregar libros
 - Eliminar libros
 - Listar libros disponibles
