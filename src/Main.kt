@@ -12,9 +12,4 @@ fun main() {
     val libro4 = Libro("El nombre del viento", "Patrick Rothfuss", 2007, "Fantasia")
     val libro = Libro("Los pilares de la tierra", "Ken Follett", 1989, "Novela historica")
 
-    //Usuarios
-    val usuario1 = Usuario("Pepito", 0)
-    val usuario2 = Usuario("Pepita", 1)
-    val usuario3 =  Usuario("Ramiro", 2)
-
 }
