@@ -1,4 +1,4 @@
-class Usuario (
+public class Usuario (
     //constructor parametrizado y principal
     val nombre: String,
     val apellido: String,
