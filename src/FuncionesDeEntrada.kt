@@ -15,7 +15,7 @@ fun validarOCrearCuenta(): Usuario {
 
     return if (respuesta == "si") {
         println("Ingrese nombre de 'Usuario' y su 'Contraseña' para logearse")
-        crearCuentaEnSistema()
+        loginEnSistema(usuario = )
         //se implementa la funcion crear cuenta a fin de testing, proximamente a desarrollar la funcion de logueo
     } else if (respuesta == "no") {
         crearCuentaEnSistema()
@@ -64,6 +64,25 @@ fun crearCuentaEnSistema(): Usuario {
     return usuarioCreado
 }
 
+fun loginEnSistema(usuario: Usuario) {
+    println("Para loguearse necesita ingresar su 'Nombre de usuario' y su 'Contraseña'")
+    println("Ingrese su nombre de usuario: ")
+    val nombreUsuario: String = readln()
+
+    println("Ingrese su contraseña")
+    val contraseña: String = readln()
+
+    val cuentaUsuario = Usuario(nombreUsuario = nombreUsuario, contraseña = contraseña)
+
+    val usuarioComparado = return if (nombreUsuario == usuario.nombreUsuario || contraseña == usuario.contraseña) {
+        println("Datos correctos, bienvenido $nombreUsuario")
+        return
+    } else {
+        println("Datos incorrectos, ingrese nuevamente")
+        return
+    }
+}
+
 //Funcion que se encarga de mostrar las opciones que tiene para realizar el sistema
 fun mostrarOpcionesDelSistema() {
 
@@ -92,14 +111,24 @@ fun ejecutarAccionSegunOpcion(usuario: Usuario, libro: Libro) {
             usuario.tomarPrestados(libro)
         }
         2 -> {
-            usuario.devolverLibro(libro)
+            val cantidadDeLibro = usuario.librosPrestados.size
+
+            when (cantidadDeLibro) {
+                0 -> println("Usted no posee libros prestados por la biblioteca")
+                else -> {
+                    println("¿Que libro quiere devolver?")
+                    usuario.mostrarLibrosPrestados()
+                    usuario.devolverLibro(libro)
+                }
+            }
         }
         3 -> {
             libro.mostrarInfo()
         }
         4 -> {
             usuario.mostrarLibrosPrestados()
-        } else -> {
+        }
+        else -> {
             println("Caracter no valido, intente con otro")
         }
     }
