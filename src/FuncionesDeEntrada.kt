@@ -1,3 +1,5 @@
+val rutaArchivo: String = "/home/bustamante/IdeaProjects/gestion-biblioteca-poo/src/Usuarios.json"
+
 //Funciones de entrada al programa
 
 //Funcion de saludar
@@ -5,7 +7,7 @@ fun saludoBienvenida() = println("Bienvenido/a al sistema de gestion de bibliote
 
 //Funcion que determina si el ususario tiene cuenta o no, y redirecciona segun corresponda devolviendo siempre un Usuario
 fun validarOCrearCuenta(): Usuario {
-    println("¿Tiene una cuenta en el sistema?")
+    println("¿Tienes una cuenta en el sistema?")
     println("Responder: Si / No")
     print("Respuesta: ")
 
@@ -14,8 +16,7 @@ fun validarOCrearCuenta(): Usuario {
     //en funcionamiento solo la rama else if!
 
     return if (respuesta == "si") {
-        println("Ingrese nombre de 'Usuario' y su 'Contraseña' para logearse")
-        crearCuentaEnSistema()
+        loginEnSistema()
         //se implementa la funcion crear cuenta a fin de testing, proximamente a desarrollar la funcion de logueo
     } else if (respuesta == "no") {
         crearCuentaEnSistema()
@@ -30,16 +31,16 @@ fun validarOCrearCuenta(): Usuario {
 fun crearCuentaEnSistema(): Usuario {
     println("Entonces, creemos una cuenta!")
 
-    print("Ingrese su nombre: ")
+    println("Ingrese su nombre: ")
     val nombre: String = readln()
 
-    print("Ingrese su apellido: ")
+    println("Ingrese su apellido: ")
     val apellido: String = readln()
 
-    print("Ingrese su nombre de usuario, (Nombre con el cual navegara por el sistema): ")
+    println("Ingrese su nombre de usuario, (Nombre con el cual navegara por el sistema): ")
     val nombreUsuario: String = readln()
 
-    print("Ingrese una contraseña valida (Esta misma debe tener mas de 4 caracteres): ")
+    println("Ingrese una contraseña valida (Esta misma debe tener mas de 4 caracteres): ")
     var contraseña: String
 
     //Bucle que valida contraseña (mayor a 4 caracteres para crear contraseña)
@@ -62,6 +63,46 @@ fun crearCuentaEnSistema(): Usuario {
     println("Contraseña: $contraseña")
 
     return usuarioCreado
+}
+
+fun loginEnSistema() : Usuario {
+
+    val lista: List<Usuario> = cargarUsuariosDesdeJson(rutaArchivo)
+
+    println("Para iniciar sesion necesita ingresar su 'Nombre de usuario' y su 'Contraseña'")
+
+    //Asigno la variable a retornar como null, asi almenos me aseguro de que la funcion devuelva algo si o si
+
+    var usuarioRetornado : Usuario? = null
+
+    while (true) {
+
+        println("Ingrese su nombre de usuario: ")
+        val nombreIngresado: String = readln().trim()
+
+        println("Ingrese su contraseña")
+        val contraseña: String = readln().trim()
+
+        for (objetoUsuario in lista) {
+
+            if (nombreIngresado == objetoUsuario.nombreUsuario) {
+
+                    if (contraseña == objetoUsuario.contraseña) {
+                        println("Inicio de sesion satisfactorio!, Bienvenido $nombreIngresado")
+                        usuarioRetornado = Usuario(objetoUsuario.nombre, objetoUsuario.apellido, objetoUsuario.nombreUsuario, objetoUsuario.contraseña)
+                        break
+                    }
+            }
+        }
+
+        if (usuarioRetornado != null) {
+            break
+        }
+
+        println("Error!, 'Nombre de usuario' o 'Contraseña' incorrectos... Por favor, intente nuevamente")
+    }
+
+    return usuarioRetornado
 }
 
 //Funcion que se encarga de mostrar las opciones que tiene para realizar el sistema
@@ -92,22 +133,28 @@ fun ejecutarAccionSegunOpcion(usuario: Usuario, libro: Libro) {
             usuario.tomarPrestados(libro)
         }
         2 -> {
-            usuario.devolverLibro(libro)
+            val cantidadDeLibro = usuario.librosPrestados.size
+
+            when (cantidadDeLibro) {
+                0 -> println("Usted no posee libros prestados por la biblioteca")
+                else -> {
+                    println("¿Que libro quiere devolver?")
+                    usuario.mostrarLibrosPrestados()
+                    usuario.devolverLibro(libro)
+                }
+            }
         }
         3 -> {
             libro.mostrarInfo()
         }
         4 -> {
             usuario.mostrarLibrosPrestados()
-        } else -> {
+        }
+        else -> {
             println("Caracter no valido, intente con otro")
         }
     }
 }
-
-//Palabra clave que vuelve al inicio del sistema
-fun volverAlInicio() { val palabraClave: String = "Inicio"}
-
 
 //Funcion que muestra la entrada al programa
 fun mostrarInterfazDeEntrada() {

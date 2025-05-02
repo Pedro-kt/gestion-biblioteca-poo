@@ -14,7 +14,7 @@ class Libro(
 
     fun marcarComoPrestado() {
         disponible = false
-        println("El libro se encuentra prestado, no disponible en biblioteca")
+        println("El libro ahora se encuentra prestado, no disponible en biblioteca")
     }
 
     fun mostrarInfo(): String {

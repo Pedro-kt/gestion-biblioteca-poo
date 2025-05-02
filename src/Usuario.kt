@@ -2,8 +2,8 @@ public class Usuario (
     //constructor parametrizado y principal
     val nombre: String,
     val apellido: String,
-    val contraseña: String,
     val nombreUsuario: String,
+    val contraseña: String,
     val librosPrestados: MutableList<Libro> = mutableListOf()
 ) {
     fun tomarPrestados(libro: Libro) {

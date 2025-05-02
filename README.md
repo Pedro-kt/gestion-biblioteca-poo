@@ -17,6 +17,7 @@ Proyecto simple de gestión de biblioteca hecho en Kotlin con programación orie
 
 ## 🔍 Proximas funcionalidades
 
+- Sistema de login
 - Agregar libros
 - Eliminar libros
 - Listar libros disponibles
