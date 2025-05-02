@@ -2,5 +2,4 @@ fun main() {
 
     mostrarInterfazDeEntrada()
 
-
 }

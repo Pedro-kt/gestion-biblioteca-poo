@@ -1,0 +1,14 @@
+[
+    {
+    "nombre": "Pedro",
+    "apellido": "Bustamante",
+    "nombreUsuario": "pedrito",
+    "contraseña": "12345"
+    },
+    {
+    "nombre": "Lucio",
+    "apellido": "Gomez",
+    "nombreUsuario": "luciog",
+    "contraseña": "abcde"
+    }
+] 
