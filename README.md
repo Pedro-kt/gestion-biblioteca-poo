@@ -22,6 +22,7 @@ Proyecto simple de gestión de biblioteca hecho en Kotlin con programación orie
 - Mejoras en el login (Validacion, control de errores, refactorización, y mejoras varias)
 - Listar libros disponibles en la biblioteca
 - Buscar libros por título
+- Mejoras en experiencia de usuarios
 
 ## 🧑‍💻 Autor
 Pedro (GitHub: [Pedro-kt](https://github.com/Pedro-kt))
