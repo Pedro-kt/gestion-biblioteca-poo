@@ -3,28 +3,26 @@ val rutaArchivo: String = "/home/bustamante/IdeaProjects/gestion-biblioteca-poo/
 //Funciones de entrada al programa
 
 //Funcion de saludar
-fun saludoBienvenida() = println("Bienvenido/a al sistema de gestion de biblioteca")
+fun saludoBienvenida() = println("\nBienvenido/a al sistema de gestion de biblioteca \n")
 
 //Funcion que determina si el ususario tiene cuenta o no, y redirecciona segun corresponda devolviendo siempre un Usuario
 fun validarOCrearCuenta(): Usuario {
-    println("¿Tienes una cuenta en el sistema?")
-    println("Responder: Si / No")
-    print("Respuesta: ")
+    while (true) {
+        println("=== Menu de Inicio de sesion o registro ===")
+        println("¿Tienes una cuenta en el sistema?")
+        println("Responder: Si / No")
+        print("Respuesta: ")
 
-    val respuesta: String = readln().lowercase()
+        val respuesta: String = readln().lowercase()
 
-    //en funcionamiento solo la rama else if!
-
-    return if (respuesta == "si") {
-        loginEnSistema()
-        //se implementa la funcion crear cuenta a fin de testing, proximamente a desarrollar la funcion de logueo
-    } else if (respuesta == "no") {
-        crearCuentaEnSistema()
-    } else {
-        println("Incorrecto intente de nuevo")
-        crearCuentaEnSistema()
+        if (respuesta == "si") {
+            return loginEnSistema()
+        } else if (respuesta == "no") {
+            return crearCuentaEnSistema()
+        } else {
+            println("\nIncorrecto intente de nuevo \n")
+        }
     }
-
 }
 
 //Funcion que permite crear una cuenta en el sistema y devuelve el usuario creado
@@ -67,17 +65,15 @@ fun crearCuentaEnSistema(): Usuario {
 
 fun loginEnSistema() : Usuario {
 
+    var usuarioRetornado : Usuario? = null //Asigno la variable a retornar como null, asi almenos me aseguro de que la funcion devuelva algo si o si
     val lista: List<Usuario> = cargarUsuariosDesdeJson(rutaArchivo)
+    var contadorErrores: Int = 0
 
     println("Para iniciar sesion necesita ingresar su 'Nombre de usuario' y su 'Contraseña'")
 
-    //Asigno la variable a retornar como null, asi almenos me aseguro de que la funcion devuelva algo si o si
-
-    var usuarioRetornado : Usuario? = null
-
     while (true) {
 
-        println("Ingrese su nombre de usuario: ")
+        println("\nIngrese su nombre de usuario: ")
         val nombreIngresado: String = readln().trim()
 
         println("Ingrese su contraseña")
@@ -88,7 +84,7 @@ fun loginEnSistema() : Usuario {
             if (nombreIngresado == objetoUsuario.nombreUsuario) {
 
                     if (contraseña == objetoUsuario.contraseña) {
-                        println("Inicio de sesion satisfactorio!, Bienvenido $nombreIngresado")
+                        println("\nInicio de sesion satisfactorio!, Bienvenido '$nombreIngresado'! \n")
                         usuarioRetornado = Usuario(objetoUsuario.nombre, objetoUsuario.apellido, objetoUsuario.nombreUsuario, objetoUsuario.contraseña)
                         break
                     }
@@ -99,7 +95,15 @@ fun loginEnSistema() : Usuario {
             break
         }
 
-        println("Error!, 'Nombre de usuario' o 'Contraseña' incorrectos... Por favor, intente nuevamente")
+        contadorErrores += 1
+
+        println("\nError!, 'Nombre de usuario' o 'Contraseña' incorrectos... Por favor, intente nuevamente \nCantidad de errores: $contadorErrores de 5")
+
+        if (contadorErrores == 5) {
+            println("\nSe llego al maximo de errores permitidos, será redirigido al menu e intente nuevamente. \n")
+            return validarOCrearCuenta()
+        }
+
     }
 
     return usuarioRetornado
@@ -130,7 +134,7 @@ fun ejecutarAccionSegunOpcion(usuario: Usuario, libro: Libro) {
     val numeroIngresado = readln().toInt()
     when (numeroIngresado) {
         1 -> {
-            usuario.tomarPrestados(libro)
+            usuario.tomarPrestados()
         }
         2 -> {
             val cantidadDeLibro = usuario.librosPrestados.size
@@ -145,7 +149,7 @@ fun ejecutarAccionSegunOpcion(usuario: Usuario, libro: Libro) {
             }
         }
         3 -> {
-            libro.mostrarInfo()
+            GestorLibrosDB().mostrarInformacion()
         }
         4 -> {
             usuario.mostrarLibrosPrestados()
@@ -160,7 +164,7 @@ fun ejecutarAccionSegunOpcion(usuario: Usuario, libro: Libro) {
 fun mostrarInterfazDeEntrada() {
 
     saludoBienvenida()
-    val usuarioActivo = validarOCrearCuenta()
+    val usuarioActivo: Usuario = validarOCrearCuenta()
     mostrarOpcionesDelSistema()
     ejecutarAccionSegunOpcion(usuarioActivo, libro = Libro("Cien años de soledad", "Gabriel Garcia Marquez", 1967, "Realismo magico"))
 

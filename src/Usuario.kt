@@ -1,20 +1,29 @@
-public class Usuario (
+class Usuario (
     //constructor parametrizado y principal
-    val nombre: String,
-    val apellido: String,
-    val nombreUsuario: String,
-    val contraseña: String,
+    val nombre: String = "",
+    val apellido: String = "",
+    val nombreUsuario: String = "",
+    val contraseña: String = "",
     val librosPrestados: MutableList<Libro> = mutableListOf()
 ) {
-    fun tomarPrestados(libro: Libro) {
-        if (libro.disponible) {
-            librosPrestados.add(libro)
-            println("El usuario $nombre, ha tomado el libro con los siguientes datos, ${libro.mostrarInfo()
-            }")
-            libro.marcarComoPrestado()
-        } else  {
-            println("El libro que el usuario: $nombre requiere, no se encuentra disponible")
+    fun tomarPrestados() {
+        println("Elija el libro que quiere tomar prestado, para tomar prestado un libro ingrese el ID correspondiente del mismo \n")
+
+        GestorLibrosDB().filtrarPorDisponible()
+
+        println("¿Seguro que quiere tomar prestado un libro? \nIngrese [Si / No]")
+
+        val respuesta: String = readln().trim().lowercase()
+
+        when (respuesta) {
+            "si" -> {
+
+                val libro = GestorUsuarioDB().elegirLibro()
+
+                println("El usuario tomo prestado el libro $libro")
+            }
         }
+
     }
 
     fun devolverLibro(libro: Libro) {
