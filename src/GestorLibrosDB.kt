@@ -3,14 +3,14 @@ import java.sql.SQLException
 class GestorLibrosDB {
 
     fun mostrarInformacion() {
+        val conexionDB = ConexionDB()
+        val conexion = conexionDB.conectarDB()
 
-        val conexion = ConexionDB().conectarDB()
-
-        val consulta = "SELECT * FROM libros"
+        val query = "SELECT * FROM libros"
         val statement = conexion?.createStatement()
 
         try {
-            val resultado = statement?.executeQuery(consulta)
+            val resultado = statement?.executeQuery(query)
 
             while (resultado?.next() == true) {
                 val idLibro = resultado.getInt("id")
@@ -32,35 +32,20 @@ class GestorLibrosDB {
             println("Error al ejecutar la consulta: ${e.message}")
         } finally {
             statement?.close()
-            ConexionDB().desconectar()
+            conexionDB.desconectar()
         }
 
     }
 
-    fun marcarComoDisponible() {
-        //disponible (1) no disponible (0)
-    }
-
-    fun filtrarPorAutor() {
-
-    }
-
-    fun filtrarPorDisponible() {
-
-    }
-
-    fun filtrarPorGenero() {
-
-    }
-
     fun traerLibroPorID(id: Int) {
-        val conexion = ConexionDB().conectarDB()
+        val conexionDB = ConexionDB()
+        val conexion = conexionDB.conectarDB()
 
-        val consulta = "SELECT * FROM libros WHERE id = $id"
+        val query = "SELECT * FROM libros WHERE id = $id"
         val statement = conexion?.createStatement()
 
         try {
-            val resultado = statement?.executeQuery(consulta)
+            val resultado = statement?.executeQuery(query)
 
             while (resultado?.next() == true) {
                 val idLibro = resultado.getInt("id")
@@ -80,7 +65,58 @@ class GestorLibrosDB {
             println("Error al ejecutar la consulta: ${e.message}")
         } finally {
             statement?.close()
-            ConexionDB().desconectar()
+            conexionDB.desconectar()
         }
     }
+
+    fun marcarComoDisponible(id: Int) {
+        val conexionDB = ConexionDB()
+        val conexion = conexionDB.conectarDB()
+
+        try {
+            val query = "UPDATE libros SET disponible = 1 WHERE id = ?"
+            val statement = conexion?.prepareStatement(query)
+            statement?.setInt(1, id)
+            statement?.executeUpdate()
+            statement?.close()
+        } catch (e: SQLException) {
+            println("Error al actualizar disponibilidad: ${e.message}")
+        } finally {
+            conexionDB.desconectar()
+        }
+    }
+
+    fun marcarComoPrestrado(id: Int) {
+        val conexionDB = ConexionDB()
+        val conexion = conexionDB.conectarDB()
+
+        try {
+            val sql = "UPDATE libros SET disponible = 0 WHERE id = ?"
+            val statement = conexion?.prepareStatement(sql)
+            statement?.setInt(1, id)
+            statement?.executeUpdate()
+            statement?.close()
+        } catch (e: SQLException) {
+            println("Error al actualizar disponibilidad: ${e.message}")
+        } finally {
+            conexionDB.desconectar()
+        }
+    }
+
+    fun marcarComoDisponible() {
+        //disponible (1) no disponible (0)
+    }
+
+    fun filtrarPorAutor() {
+
+    }
+
+    fun filtrarPorDisponible() {
+
+    }
+
+    fun filtrarPorGenero() {
+
+    }
+
 }

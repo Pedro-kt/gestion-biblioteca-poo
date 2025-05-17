@@ -3,12 +3,12 @@ import java.sql.SQLException
 class GestorUsuarioDB {
 
     fun elegirLibro() : Libro? {
-
-        val conector = ConexionDB().conectarDB()
+        val conexionDB = ConexionDB()
+        val conexion = conexionDB.conectarDB()
 
         val consulta = "SELECT * FROM libros WHERE disponible = 1"
 
-        val statement = conector?.createStatement()
+        val statement = conexion?.createStatement()
 
         var objetoLibro: Libro? = null
         try {
@@ -37,7 +37,7 @@ class GestorUsuarioDB {
             val idIngresado: Int = readln().toInt()
 
             val consulta = "SELECT * FROM libros WHERE id = $idIngresado"
-            val statement = conector?.createStatement()
+            val statement = conexion?.createStatement()
 
             val resultado = statement?.executeQuery(consulta)
 
@@ -56,9 +56,7 @@ class GestorUsuarioDB {
                 println("Género: $genero")
                 println("Año de publicación: $añoDePublicacion \n")
 
-                objetoLibro = Libro(titulo,autor,añoDePublicacion,genero)
-
-                Usuario().librosPrestados.add(objetoLibro)
+                objetoLibro = Libro(idLibro, titulo, autor,añoDePublicacion, genero)
 
                 return objetoLibro
             }
@@ -66,7 +64,7 @@ class GestorUsuarioDB {
             println("Error al realizar la consulta ${e.message}")
         } finally {
             statement?.close()
-            ConexionDB().desconectar()
+            conexionDB.desconectar()
         }
 
         return objetoLibro

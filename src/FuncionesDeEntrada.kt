@@ -1,5 +1,3 @@
-val rutaArchivo: String = "/home/bustamante/IdeaProjects/gestion-biblioteca-poo/src/Usuarios.json"
-
 //Funciones de entrada al programa
 
 //Funcion de saludar
@@ -20,7 +18,7 @@ fun validarOCrearCuenta(): Usuario {
         } else if (respuesta == "no") {
             return crearCuentaEnSistema()
         } else {
-            println("\nIncorrecto intente de nuevo \n")
+            println("\nIncorrecto intente de nuevo por favor...\n")
         }
     }
 }
@@ -65,6 +63,8 @@ fun crearCuentaEnSistema(): Usuario {
 
 fun loginEnSistema() : Usuario {
 
+    val rutaArchivo: String = "/home/bustamante/IdeaProjects/gestion-biblioteca-poo/src/Usuarios.json"
+
     var usuarioRetornado : Usuario? = null //Asigno la variable a retornar como null, asi almenos me aseguro de que la funcion devuelva algo si o si
     val lista: List<Usuario> = cargarUsuariosDesdeJson(rutaArchivo)
     var contadorErrores: Int = 0
@@ -83,11 +83,11 @@ fun loginEnSistema() : Usuario {
 
             if (nombreIngresado == objetoUsuario.nombreUsuario) {
 
-                    if (contraseña == objetoUsuario.contraseña) {
-                        println("\nInicio de sesion satisfactorio!, Bienvenido '$nombreIngresado'! \n")
-                        usuarioRetornado = Usuario(objetoUsuario.nombre, objetoUsuario.apellido, objetoUsuario.nombreUsuario, objetoUsuario.contraseña)
-                        break
-                    }
+                if (contraseña == objetoUsuario.contraseña) {
+                    println("\nInicio de sesion satisfactorio!, Bienvenido '$nombreIngresado'! \n")
+                    usuarioRetornado = Usuario(objetoUsuario.nombre, objetoUsuario.apellido, objetoUsuario.nombreUsuario, objetoUsuario.contraseña)
+                    break
+                }
             }
         }
 
@@ -112,52 +112,62 @@ fun loginEnSistema() : Usuario {
 //Funcion que se encarga de mostrar las opciones que tiene para realizar el sistema
 fun mostrarOpcionesDelSistema() {
 
-    println("Dentro del sistema usted puede:")
-
     //Opciones de accion en el programa
     val opciones = listOf(
-        "- Tomar prestado un libro, ingrese: 1",
-        "- Devolver un libro, ingrese: 2",
-        "- Pedir informacion de un libro, ingrese: 3",
-        "- Mostrar la cantidad de libros que tiene prestado el usuario, ingrese: 4"
+        "=== Menu ===",
+        "Dentro del sistema usted puede:",
+        "- Tomar prestado un libro, ingrese: [ 1 ]",
+        "- Devolver un libro, ingrese: [ 2 ]",
+        "- Pedir informacion de los libros, ingrese: [ 3 ]",
+        "- Mostrar la cantidad de libros que tiene prestado el usuario, ingrese: [ 4 ]",
+        "- Salir del sistema: [ 5 ]"
     )
 
-    //iterador de la lista opciones, para imprimir en pantalla las opciones que tiene el sistema para brindar
     for (verOpciones in opciones) {
         println(verOpciones)
     }
 }
 
+//Funcion que toma la opcion que quiere realizar el usuario y ejecuta la accion segun corresponda
+fun ejecutarAccionSegunOpcion(usuario: Usuario) {
 
-//Funcion que toma la opcion que quiere realizar el usuario y ejecuta la accion segun corresponda, en funcionamiento solo el item de tomar prestado un libro!
-fun ejecutarAccionSegunOpcion(usuario: Usuario, libro: Libro) {
-    val numeroIngresado = readln().toInt()
-    when (numeroIngresado) {
-        1 -> {
-            usuario.tomarPrestados()
-        }
-        2 -> {
-            val cantidadDeLibro = usuario.librosPrestados.size
+    while (true) {
 
-            when (cantidadDeLibro) {
-                0 -> println("Usted no posee libros prestados por la biblioteca")
-                else -> {
-                    println("¿Que libro quiere devolver?")
+        mostrarOpcionesDelSistema()
+
+        try {
+            print("Ingrese su opcion: ")
+            val numeroIngresado = readln().toInt()
+            when (numeroIngresado) {
+                1 -> {
+                    usuario.tomarPrestados()
+                }
+                2 -> {
+                    usuario.devolverLibro()
+                }
+                3 -> {
+                    GestorLibrosDB().mostrarInformacion()
+                }
+                4 -> {
                     usuario.mostrarLibrosPrestados()
-                    usuario.devolverLibro(libro)
+                }
+                5 -> {
+                    val salir = salirDelSistema(usuario)
+
+                    if (salir == true) {
+                        break
+                    }
+                }
+                else -> {
+                    println("\nCaracter no valido, intente con otro \n")
                 }
             }
+        } catch (e: NumberFormatException) {
+            println("Debe ingresar un numero de acuerdo a la accion a realizar, intente nuevamente... \n")
         }
-        3 -> {
-            GestorLibrosDB().mostrarInformacion()
-        }
-        4 -> {
-            usuario.mostrarLibrosPrestados()
-        }
-        else -> {
-            println("Caracter no valido, intente con otro")
-        }
+
     }
+
 }
 
 //Funcion que muestra la entrada al programa
@@ -165,7 +175,34 @@ fun mostrarInterfazDeEntrada() {
 
     saludoBienvenida()
     val usuarioActivo: Usuario = validarOCrearCuenta()
-    mostrarOpcionesDelSistema()
-    ejecutarAccionSegunOpcion(usuarioActivo, libro = Libro("Cien años de soledad", "Gabriel Garcia Marquez", 1967, "Realismo magico"))
+    ejecutarAccionSegunOpcion(usuarioActivo)
 
+}
+
+//Funcion que permite salir del sistema si el usuario lo desea
+fun salirDelSistema(usuario: Usuario) : Boolean {
+
+    var salir: Boolean = false
+
+    while (true) {
+        println("\n¿Seguro que desea salir del sistema? [ Si / No ]")
+        print("Respuesta: ")
+        val respuesta: String = readln().trim().lowercase()
+
+        when (respuesta) {
+            "si" -> {
+                println("\nGracias por usar el sistema... Hasta luego '${usuario.nombreUsuario}!'")
+                salir = true
+                break
+            }
+            "no" -> {
+                println("\nVolviendo al menu... \n")
+                break
+            }
+            else -> {
+                println("\nCaracter no valido, intente nuevamente...")
+            }
+        }
+    }
+    return salir
 }

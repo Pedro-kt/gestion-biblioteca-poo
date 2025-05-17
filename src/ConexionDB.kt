@@ -5,7 +5,7 @@ import java.sql.SQLException
 
 class ConexionDB {
     //url de conexion a la base de datos
-    val url = "jdbc:sqlite:/home/bustamante/IdeaProjects/gestion-biblioteca-poo/db/biblioteca"
+    val url = "jdbc:sqlite:/home/bustamante/IdeaProjects/gestion-biblioteca-poo/db/biblioteca?busy_timeout=5000"
 
     //variable que mantiene la conexion
     var conexion: Connection? = null
